@@ -11,4 +11,4 @@ class index(object):
     def GET(self, name):
         return render('welcome.mako', name=name)
 
-app = web.application(urls, globals())
+app = web.application(urls, globals(), autoreload=True)

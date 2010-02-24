@@ -2,4 +2,4 @@
 <%def name="title()">
     Blog
 </%def>
-<h1>I love Blogs and ${name}</h1>
+<b>I love Blogs and ${name}</b>
