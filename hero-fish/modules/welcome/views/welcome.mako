@@ -2,4 +2,4 @@
 <%def name="title()">
     Blog
 </%def>
-<b>I love Blogs and ${name}</b>
+<b>I love Blogs and ${name.capitalize()} Wong</b>
