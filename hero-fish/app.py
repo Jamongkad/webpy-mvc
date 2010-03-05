@@ -3,6 +3,7 @@ import web
 import app_globals
 
 from view import render
+from auth import session
 
 import welcome
 
@@ -29,5 +30,5 @@ class maro(object):
         return welcome.index().GET(name)
 
 if __name__ == "__main__":
-    web.wsgi.runwsgi = lambda func, addr=None: web.wsgi.runfcgi(func, addr)
+    #web.wsgi.runwsgi = lambda func, addr=None: web.wsgi.runfcgi(func, addr)
     app.run()
