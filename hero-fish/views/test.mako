@@ -4,8 +4,3 @@
 </%def>
 
 <p>I love Python</p>
-<p>I love Python</p>
-<p>I love Python</p>
-<p>I love Python</p>
-<p>I love Python</p>
-<p>I love Python</p>
