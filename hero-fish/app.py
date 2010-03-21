@@ -25,21 +25,24 @@ db = Connection().sprocket_db
 app = web.application(urls, globals(), autoreload=True)
 
 from SprocketAuth import SprocketAuth
-SprocketAuth(app)
+sa = SprocketAuth(app)
 
 class index(object):
     def GET(self):
         return render('test.mako')
+        
 
 class session_active(object):
     def GET(self): 
         if web.ctx.session.get('loggedIn') is True:
-            return 'You are here cuz session is active'
+            return web.ctx.env.get('HTTP_REFERER')
         return web.seeother(web.ctx.homedomain)
 
+
 class test_session(object):
+    @sa.protect()
     def GET(self):
-        return web.ctx.env
+        return 'mathew'
 
 class logout(object):
     def GET(self):
