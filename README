@@ -1,1 +1,7 @@
 Webpy-mvc is my attempt to build a mini HMVC framework in web.py
+
+milestones:
+    * HMVC modules are up to snuff.
+
+work in progress:
+    * homegrown authentication using MongoDB as a backend store.
