@@ -1,6 +1,7 @@
 import web
 
 class SprocketAuth(object):
+
     def __init__(self, app):
         self.session = web.session.Session(app, web.session.DiskStore('sessions'))
 
@@ -20,5 +21,19 @@ class SprocketAuth(object):
             return new
         return meth_signature
 
-    def login(self): return True
-    def logout(self): return True
+    def login(self, login_vars):  
+        if login_vars.get('check'):
+            web.ctx.session.loggedIn = True
+            if login_vars.get('redirect_to_if_pass'):
+                raise web.seeother(login_vars.get('redirect_to_if_pass'))
+            else:
+                raise web.seeother(web.ctx.homedomain)
+        else:
+            raise web.seeother(web.ctx.homedomain) 
+
+         
+
+
+
+    def logout(self):  
+        web.ctx.session.loggedIn = False

@@ -31,14 +31,11 @@ class index(object):
     def GET(self):
         return render('test.mako')
         
-
 class session_active(object):
-    def GET(self): 
-        if web.ctx.session.get('loggedIn') is True:
-            return web.ctx.env.get('HTTP_REFERER')
-        return web.seeother(web.ctx.homedomain)
-
-
+    @sa.protect()
+    def GET(self):   
+        return 'pwet'
+       
 class test_session(object):
     @sa.protect()
     def GET(self):
@@ -46,18 +43,30 @@ class test_session(object):
 
 class logout(object):
     def GET(self):
-        web.ctx.session.loggedIn = False
+        sa.logout()
 
 class login(object):
-    def GET(self):
-        web.ctx.session.loggedIn = True
+    def POST(self):
+        post = web.input()
+        import hashlib
+        password = hashlib.sha1(post.password).hexdigest()
+        mongo_query = db.users.find_one({'name' : post.user_name, 'password' : password}) 
+        return sa.login({ 
+            'check' : mongo_query,
+            'redirect_to_if_pass' : '../session_active',
+        })
 
 class testing(object):
     def GET(self):
         get = web.input()
-        query = session.query(User).filter_by(name=get.name).first()
-        mongo_query = db.users.find_one({'name' : get.name}) 
-        return mongo_query
+        #query = session.query(User).filter_by(name=get.name).first() 
+        import hashlib
+        password = hashlib.sha1(get.password).hexdigest()
+        mongo_query = db.users.find_one({'name' : get.name, 'password' : password}) 
+
+        if mongo_query:
+            return 'matched'
+        return 'no match'
 
 class maro(object):
     def GET(self, name):
