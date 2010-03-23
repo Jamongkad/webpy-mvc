@@ -20,5 +20,5 @@ class SprocketAuth(object):
             return new
         return meth_signature
 
-    def showVars(self):
-        return web.ctx.session
+    def login(self): return True
+    def logout(self): return True
