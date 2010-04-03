@@ -36,11 +36,6 @@ class session_active(object):
     def GET(self):   
         return 'pwet'
        
-class test_session(object):
-    @sa.protect()
-    def GET(self):
-        return 'mathew'
-
 class logout(object):
     def GET(self):
         sa.logout()
@@ -53,20 +48,9 @@ class login(object):
         mongo_query = db.users.find_one({'name' : post.user_name, 'password' : password}) 
         return sa.login({ 
             'check' : mongo_query,
-            'redirect_to_if_pass' : '../session_active',
+            'redirect_to_if_pass' : '../welcome/',
+            'redirect_to_if_fail' : '../'
         })
-
-class testing(object):
-    def GET(self):
-        get = web.input()
-        #query = session.query(User).filter_by(name=get.name).first() 
-        import hashlib
-        password = hashlib.sha1(get.password).hexdigest()
-        mongo_query = db.users.find_one({'name' : get.name, 'password' : password}) 
-
-        if mongo_query:
-            return 'matched'
-        return 'no match'
 
 class maro(object):
     def GET(self, name):

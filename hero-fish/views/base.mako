@@ -6,6 +6,8 @@
         <title>${self.title()}</title>
     </head>
     <body>
+        <p>Header</p>
         ${self.body()} 
+        <p>Footer</p>
     </body>
 </html>

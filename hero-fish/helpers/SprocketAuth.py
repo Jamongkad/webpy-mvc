@@ -31,9 +31,5 @@ class SprocketAuth(object):
         else:
             raise web.seeother(web.ctx.homedomain) 
 
-         
-
-
-
     def logout(self):  
         web.ctx.session.loggedIn = False
