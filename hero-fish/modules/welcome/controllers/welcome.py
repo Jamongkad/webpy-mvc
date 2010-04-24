@@ -6,7 +6,6 @@ from view import render
 
 db = Connection().sprocket_db
 
-
 urls = (
     '/', 'index',
     '/select', 'select'
@@ -22,6 +21,7 @@ class index(object):
         return render('welcome.mako')
 
 class select(object):
+    @sa.protect()
     def GET(self):
         input = web.input()
         result = db.units.find_one({'name' : input.name})

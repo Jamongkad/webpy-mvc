@@ -29,7 +29,7 @@ sa = SprocketAuth(app)
 
 class index(object):
     def GET(self):
-        return render('test.mako')
+        return render('index.mako')
         
 class session_active(object):
     @sa.protect()
