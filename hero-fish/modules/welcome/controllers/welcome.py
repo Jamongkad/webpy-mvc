@@ -3,6 +3,7 @@ import web
 
 from pymongo import Connection
 from view import render
+from forms import CreateAccountForm
 
 db = Connection().sprocket_db
 
@@ -18,7 +19,8 @@ sa = SprocketAuth(app)
 class index(object):
     @sa.protect()
     def GET(self): 
-        return render('welcome.mako')
+        frm = CreateAccountForm()
+        return render('welcome.mako', frm=frm)
 
 class select(object):
     @sa.protect()
@@ -26,3 +28,5 @@ class select(object):
         input = web.input()
         result = db.units.find_one({'name' : input.name})
         return result
+
+
