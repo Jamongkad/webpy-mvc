@@ -10,10 +10,13 @@
     Or try your luck playing as a space mercenary, where plying your trade by protecting merchant trade space or practice piracy and fleece your 
     victims for all their worth. 
 </p>
-
-<form method="POST" action="/pwet">
+<br/><br/>
+<p>
+<b>Create your account now!</b>
+<form method="POST" action="./create_account">
     <div>${frm.username.label}: ${frm.username()}</div>
     <div>${frm.password.label}: ${frm.password()}</div>
     <input type="submit" value="submit" />
 </form>
+</p>
 </div>

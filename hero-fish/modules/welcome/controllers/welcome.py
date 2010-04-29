@@ -4,12 +4,14 @@ import web
 from pymongo import Connection
 from view import render
 from forms import CreateAccountForm
+from webob import Request
 
 db = Connection().sprocket_db
 
 urls = (
     '/', 'index',
-    '/select', 'select'
+    '/select', 'select',
+    '/create_account', 'create_account'
 )
 
 app = web.application(urls, globals(), autoreload=True)
@@ -19,9 +21,22 @@ sa = SprocketAuth(app)
 class index(object):
     @sa.protect()
     def GET(self): 
+        request = web.input()
         frm = CreateAccountForm()
         return render('welcome.mako', frm=frm)
 
+class create_account(object):
+    def POST(self):
+        input = web.data()
+        env = web.ctx.env
+        request = Request(env)
+        request.method = 'POST'
+        request.body = input
+        frm = CreateAccountForm(request.POST) 
+        if frm.validate():
+            return render('welcome.mako', frm=frm)
+        return frm.errors
+ 
 class select(object):
     @sa.protect()
     def GET(self):
