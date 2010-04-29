@@ -26,6 +26,10 @@ class index(object):
         return render('welcome.mako', frm=frm)
 
 class create_account(object):
+    @sa.protect()
+    def GET(self):
+        pass
+
     def POST(self):
         input = web.data()
         env = web.ctx.env
@@ -33,9 +37,9 @@ class create_account(object):
         request.method = 'POST'
         request.body = input
         frm = CreateAccountForm(request.POST) 
-        if frm.validate():
+        if frm.validate() != True:
             return render('welcome.mako', frm=frm)
-        return frm.errors
+        return 'pass create account bzzt!'
  
 class select(object):
     @sa.protect()
