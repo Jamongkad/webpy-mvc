@@ -3,8 +3,9 @@ import web
 
 from pymongo import Connection
 from view import render
-from forms import CreateAccountForm
-from webob import Request
+from forms import CreateAccountForm, ChooseOccup
+from myrequest import Request
+#from webob import Request
 
 db = Connection().sprocket_db
 
@@ -23,7 +24,8 @@ class index(object):
     def GET(self): 
         request = web.input()
         frm = CreateAccountForm()
-        return render('welcome.mako', frm=frm)
+        occup = ChooseOccup()
+        return render('welcome.mako', frm=frm, occup=occup)
 
 class create_account(object):
     @sa.protect()
@@ -31,15 +33,10 @@ class create_account(object):
         pass
 
     def POST(self):
-        input = web.data()
-        env = web.ctx.env
-        request = Request(env)
-        request.method = 'POST'
-        request.body = input
-        frm = CreateAccountForm(request.POST) 
+        frm = CreateAccountForm(Request().POST()) 
         if frm.validate() != True:
             return render('welcome.mako', frm=frm)
-        return 'pass create account bzzt!'
+        return web.input()
  
 class select(object):
     @sa.protect()
