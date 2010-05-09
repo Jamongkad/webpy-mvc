@@ -6,6 +6,9 @@ from view import render
 from auth import session, User
 from pymongo import Connection
 
+from forms import LoginAccountForm, CreateAccountForm
+from myrequest import Request
+
 import welcome
 
 web.config.debug = True
@@ -18,6 +21,7 @@ urls = (
     '/session_active', 'session_active',
     '/login', 'login',
     '/logout', 'logout',
+    '/create_account', 'create_account',
     '/welcome', welcome.app
 )
 
@@ -29,8 +33,21 @@ sa = SprocketAuth(app)
 
 class index(object):
     def GET(self):
-        return render('index.mako')
+        login  = LoginAccountForm()
+        create = CreateAccountForm()
+        return render('index.mako', login=login, create=create)
         
+class create_account(object):
+    @sa.protect()
+    def GET(self): pass
+
+    def POST(self): 
+        login  = LoginAccountForm()
+        create = CreateAccountForm(Request().POST) 
+        if create.validate() != True:
+            return render('index.mako', login=login, create=create)
+        return web.input()
+
 class session_active(object):
     @sa.protect()
     def GET(self):   
@@ -42,10 +59,15 @@ class logout(object):
 
 class login(object):
     def POST(self):
+        login  = LoginAccountForm(Request().POST)
+        create = CreateAccountForm() 
+        if login.validate() != True:
+            return render('index.mako', login=login, create=create)
+
         post = web.input()
         import hashlib
         password = hashlib.sha1(post.password).hexdigest()
-        mongo_query = db.users.find_one({'name' : post.user_name, 'password' : password}) 
+        mongo_query = db.users.find_one({'name' : post.username, 'password' : password}) 
         return sa.login({ 
             'check' : mongo_query,
             'redirect_to_if_pass' : '../welcome/',

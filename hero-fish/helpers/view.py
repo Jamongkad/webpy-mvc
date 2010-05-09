@@ -2,13 +2,17 @@ import re, os, sys
 from mako.template import Template
 from mako.lookup import TemplateLookup
 
-directories = ['./views']
+def gather_view_files():
 
-[directories.append(dirpath) for dirpath, dirnames, filenames in os.walk(os.path.abspath('./modules'))
-    if re.search('(?<=views)', dirpath)]
+    directories = ['./views']
 
-mylookup = TemplateLookup(directories, output_encoding='utf-8')
+    [directories.append(dirpath) for dirpath, dirnames, filenames in os.walk(os.path.abspath('./modules'))
+        if re.search('(?<=views)', dirpath)]
+
+    mylookup = TemplateLookup(directories, output_encoding='utf-8')
+
+    return mylookup
 
 def render(templatename, **kwa):
-    mytemplate = mylookup.get_template(templatename)
+    mytemplate = gather_view_files().get_template(templatename)
     return mytemplate.render(**kwa)
