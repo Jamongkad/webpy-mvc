@@ -10,7 +10,7 @@
             <option value="${i['name']}">${i['name']}</option>
         % endfor
     </select>
-    <input type="hidden" name="user_name" value="${user_id}" />
+    <input type="hidden" name="user_id" value="${user_id}" />
     <input type="submit" value="submit"/>
 </form>
 </div>
