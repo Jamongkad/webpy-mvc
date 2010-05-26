@@ -10,7 +10,7 @@ db = Connection().sprocket_db
 
 urls = (
     '/', 'index',
-    '/select', 'select',
+    '/add_info', 'add_info',
     '/create_account', 'create_account'
 )
 
@@ -21,9 +21,14 @@ sa = SprocketAuth(app)
 class index(object):
     @sa.protect()
     def GET(self): 
-        request = web.input()
-        occup = ChooseOccup()
-        return render('welcome.mako', occup=occup)
+        planets = db.planets.find()
+        user_id = web.ctx.session['user_id']
+        return render('welcome.mako', planets=planets, user_id=user_id)
+
+class add_info(object):
+    def POST(self):
+        i = web.input(planets=[])
+        return i
 
 class create_account(object):
     @sa.protect()
@@ -34,13 +39,4 @@ class create_account(object):
         frm = CreateAccountForm(Request().POST) 
         if frm.validate() != True:
             return render('welcome.mako', frm=frm)
-        return web.input()
- 
-class select(object):
-    @sa.protect()
-    def GET(self):
-        input = web.input()
-        result = db.units.find_one({'name' : input.name})
-        return result
-
-
+        return web.input() 

@@ -24,6 +24,7 @@ class SprocketAuth(object):
     def login(self, login_vars):  
         if login_vars.get('check'):
             web.ctx.session.loggedIn = True
+            web.ctx.session.user_id  = login_vars.get('user')
             if login_vars.get('redirect_to_if_pass'):
                 raise web.seeother(login_vars.get('redirect_to_if_pass'))
             else:

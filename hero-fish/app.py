@@ -8,6 +8,7 @@ from pymongo import Connection
 
 from forms import LoginAccountForm, CreateAccountForm
 from myrequest import Request
+from SprocketAuth import SprocketAuth
 
 import welcome
 
@@ -27,8 +28,8 @@ urls = (
 
 db = Connection().sprocket_db
 app = web.application(urls, globals(), autoreload=True)
+ 
 
-from SprocketAuth import SprocketAuth
 sa = SprocketAuth(app)
 
 class index(object):
@@ -36,7 +37,7 @@ class index(object):
         login  = LoginAccountForm()
         create = CreateAccountForm()
         return render('index.mako', login=login, create=create)
-        
+
 class create_account(object):
     @sa.protect()
     def GET(self): pass
@@ -68,10 +69,12 @@ class login(object):
         import hashlib
         password = hashlib.sha1(post.password).hexdigest()
         mongo_query = db.users.find_one({'name' : post.username, 'password' : password}) 
+
         return sa.login({ 
             'check' : mongo_query,
             'redirect_to_if_pass' : '../welcome/',
-            'redirect_to_if_fail' : '../'
+            'redirect_to_if_fail' : '../',
+            'user' : mongo_query['_id']
         })
 
 class maro(object):
