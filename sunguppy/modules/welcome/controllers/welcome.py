@@ -2,6 +2,7 @@ import app_globals
 import web
 
 from pymongo import Connection
+from pymongo.objectid import ObjectId
 from view import render
 from forms import ChooseOccup
 from myrequest import Request
@@ -27,15 +28,11 @@ class index(object):
 
 class add_info(object):
     def POST(self):
-        from pymongo.objectid import ObjectId
         i = web.input(planets=[])
         usr = db.users.find_one({'_id': ObjectId(i['user_id'])})
-
         usr['planets_owned'] = i['planets']
         db.users.save(usr)
         return "saved!"
-
-        
 
 class create_account(object):
     @sa.protect()

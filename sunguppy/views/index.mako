@@ -1,6 +1,6 @@
 <%inherit file="base.mako" />
 <%def name="title()">
-    Frontier! the Space exploration game powered by it's economy!
+    SunGuppy!
 </%def>
 
 <div class="grid_10">
