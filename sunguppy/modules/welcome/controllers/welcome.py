@@ -22,17 +22,20 @@ sa = SprocketAuth(app)
 class index(object):
     @sa.protect()
     def GET(self): 
-        planets = db.planets.find()
         user_id = web.ctx.session['user_id']
-        return render('welcome.mako', planets=planets, user_id=user_id)
+        return render('welcome.mako', user_id=user_id)
 
 class add_info(object):
     def POST(self):
         i = web.input(planets=[])
-        usr = db.users.find_one({'_id': ObjectId(i['user_id'])})
-        usr['planets_owned'] = i['planets']
-        db.users.save(usr)
-        return "saved!"
+        planets = i['planets']
+        if not planets:
+            return "no planets"
+        else:
+            usr = db.users.find_one({'_id': ObjectId(i['user_id'])})
+            usr['planets_owned'] = i['planets']
+            db.users.save(usr)
+            return "saved!"
 
 class create_account(object):
     @sa.protect()

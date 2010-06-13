@@ -7,6 +7,8 @@
         <link rel="stylesheet" type="text/css" href="/static/css/reset.css"></link>
         <link rel="stylesheet" type="text/css" href="/static/css/fluid_grid.css"></link>
         <link rel="stylesheet" type="text/css" href="/static/css/jquery.asmselect.css"></link>
+
+        <link rel="stylesheet" type="text/css" href="/static/css/sunguppy_1.2.css"></link>
         <title>${self.title()}</title>
 
     </head>

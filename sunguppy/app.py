@@ -17,9 +17,6 @@ web.config.debug = True
 urls = (
     '/', 'index',
     '/maro/(.*)', 'maro',
-    '/test', 'testing',
-    '/test_session', 'test_session',
-    '/session_active', 'session_active',
     '/login', 'login',
     '/logout', 'logout',
     '/create_account', 'create_account',
@@ -48,12 +45,7 @@ class create_account(object):
         if create.validate() != True:
             return render('index.mako', login=login, create=create)
         return web.input()
-
-class session_active(object):
-    @sa.protect()
-    def GET(self):   
-        return 'pwet'
-       
+ 
 class logout(object):
     def GET(self):
         sa.logout()
