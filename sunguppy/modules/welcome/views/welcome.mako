@@ -2,7 +2,7 @@
 <%def name="title()">
     Sunguppy Welcome Page
 </%def>
-
+${header}
 <div class="grid_10">
     ${user_id}
 </div>

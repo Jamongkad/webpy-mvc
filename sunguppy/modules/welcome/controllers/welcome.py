@@ -7,6 +7,8 @@ from view import render
 from forms import ChooseOccup
 from myrequest import Request
 
+from forms import LoginAccountForm, CreateAccountForm
+
 db = Connection().sprocket_db
 
 urls = (
@@ -23,7 +25,10 @@ class index(object):
     @sa.protect()
     def GET(self): 
         user_id = web.ctx.session['user_id']
-        return render('welcome.mako', user_id=user_id)
+        login  = LoginAccountForm()
+        create = CreateAccountForm()
+        header = render('header.mako', login=login, create=create)
+        return render('welcome.mako', user_id=user_id, header=header)
 
 class add_info(object):
     def POST(self):
