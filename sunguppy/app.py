@@ -31,10 +31,7 @@ sa = SprocketAuth(app)
 
 class index(object):
     def GET(self):
-        login  = LoginAccountForm()
-        create = CreateAccountForm()
-        header = render('header.mako', login=login, create=create)
-        return render('index.mako', header=header)
+        return render('index.mako')
 
 class create_account(object):
     @sa.protect()
@@ -50,6 +47,7 @@ class create_account(object):
 class logout(object):
     def GET(self):
         sa.logout()
+        return web.seeother('../')
 
 class login(object):
     def POST(self):

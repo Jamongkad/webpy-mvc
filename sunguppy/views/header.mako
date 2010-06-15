@@ -1,3 +1,16 @@
+<%
+    import app_globals 
+    from forms import LoginAccountForm, CreateAccountForm
+
+    login  = LoginAccountForm()
+    create = CreateAccountForm()
+%>
+<div id="nav_holder">
+<ul class="top_nav">
+    <li><a href="/">SunGuppy!</a></li>
+    <li><a href="/kids">SunGuppy Kids!</a></li>
+</ul>
+
 <ul class='nav'>
     <li><strong>Login</strong>
         <ul>
@@ -44,4 +57,11 @@
             </li>
         </ul>
     </li>
+
+    <li><strong>account</strong>
+        <ul>
+            <li><a href="/logout">logout</a>
+        </ul>
+    </li>
 </ul>
+</div>

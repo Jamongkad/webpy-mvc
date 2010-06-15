@@ -1,3 +1,16 @@
+
+html {
+    font-family: Arial, sans-serif;
+    font-size: 10pt;
+}
+
+div#nav_holder{
+    background-color: #ebeff9;    
+    border-bottom: 1px solid #003399;
+    font-size: 9pt;
+    padding: 20px 8px 20px;
+ }
+
 ul.nav, 
     .nav ul {
     margin: 0;
@@ -10,14 +23,26 @@ ul.nav,
 
 ul.nav {
     display: table;    
-    width: 100%;
-    table-layout: fixed;
+    float: right;
 }
 
-ul.nav>li {
+ul.top_nav > li {    
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    display: inline;
+    z-index: 100;
+}
+
+ul.top_nav { 
+    display: table;    
+    float: left;
+}
+
+ul.nav>li, ul.top_nav>li {
     display: table-cell;
     position: relative;
-    padding: 2px 6px;
+    padding: 0px 6px;
 }
 
 ul.nav li>ul{
@@ -25,21 +50,24 @@ ul.nav li>ul{
     position: absolute;
     max-width: 100%;
     margin-left: -6px;
-    margin-top: 2px;
+    margin-top: 0px;
 }
 
 ul.nav li:hover > ul  {
     display: block; 
 }
 
-.nav ul li a {
+.nav ul li a, .top_nav ul li a {
     display: block;
     padding: 2px 10px;
 }
 
 ul.nav,
     .nav ul,
-    .nav ul li a {
+    .nav ul li a,
+ul.top_nav,
+    .top_nav ul,
+    .top_nav ul li a {
     background-color: #fff;        
     color: #369;
 }
@@ -57,10 +85,12 @@ ul.nav li:active,
 }
 
 ul.nav, 
-    .nav ul {
+    .nav ul,
+ul.top_nav,
+    .top_nav ul {
    border: 1px solid #369;        
 }
 
-.nav a {
+.nav a, .top_nav a {
     text-decoration: none;    
 }
