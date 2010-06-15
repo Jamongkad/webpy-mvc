@@ -14,8 +14,7 @@
     </head>
     <body>
     <div class="container_12">
-        <div class="grid_12"> 
-        </div>
+        <div class="grid_12"></div>
         ${self.body()} 
         <div class="grid_12"></div>
     </div>

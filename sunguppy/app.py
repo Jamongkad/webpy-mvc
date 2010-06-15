@@ -33,7 +33,8 @@ class index(object):
     def GET(self):
         login  = LoginAccountForm()
         create = CreateAccountForm()
-        return render('index.mako', login=login, create=create)
+        header = render('header.mako', login=login, create=create)
+        return render('index.mako', header=header)
 
 class create_account(object):
     @sa.protect()
