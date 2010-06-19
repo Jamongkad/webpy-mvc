@@ -10,7 +10,7 @@ from forms import LoginAccountForm, CreateAccountForm
 from myrequest import Request
 from SprocketAuth import SprocketAuth
 
-import welcome
+import welcome, catalog
 
 web.config.debug = True
 
@@ -20,7 +20,8 @@ urls = (
     '/login', 'login',
     '/logout', 'logout',
     '/create_account', 'create_account',
-    '/welcome', welcome.app
+    '/welcome', welcome.app,
+    '/catalog', catalog.app
 )
 
 db = Connection().sprocket_db
