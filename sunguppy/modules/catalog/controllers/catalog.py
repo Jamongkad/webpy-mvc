@@ -16,4 +16,4 @@ sa = SprocketAuth(app)
 
 class index(object):
     def GET(self):
-        return "Catalog Module"
+        return render('catalog.mako')
