@@ -4,5 +4,5 @@
 </%def>
 
 <div class="grid_10">
-
+    This is the catalog 
 </div>
