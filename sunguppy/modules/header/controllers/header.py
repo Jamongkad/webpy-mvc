@@ -5,10 +5,11 @@ from pymongo import Connection
 from pymongo.objectid import ObjectId
 from view import render
 from myrequest import Request
+from forms import LoginAccountForm, CreateAccountForm
+import masthead
 
 urls = (
     '/', 'index',
-    '/test', 'test'
 )
 
 app = web.application(urls, globals(), autoreload=True)
@@ -17,4 +18,4 @@ sa = SprocketAuth(app)
 
 class index(object):
     def GET(self):
-        return render('catalog.mako')
+        return render('header.mako', login=LoginAccountForm(), create=CreateAccountForm(), masthead=masthead.index().GET('Mathew'))

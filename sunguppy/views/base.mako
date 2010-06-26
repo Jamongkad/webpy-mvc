@@ -15,7 +15,8 @@
     <body>
     <div class="container_12">
         <div class="grid_12">
-            <%include file="header.mako" />
+            <%! import header %>
+            ${header.index().GET()}
         </div>
         ${self.body()} 
         <div class="grid_12"></div>

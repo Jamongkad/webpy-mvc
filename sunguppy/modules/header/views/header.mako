@@ -1,21 +1,9 @@
-<%!
-    import app_globals 
-    from forms import LoginAccountForm, CreateAccountForm
-    from view import render
-    import masthead
-
-    login  = LoginAccountForm()
-    create = CreateAccountForm()
-%>
-
-${masthead.index().GET('Marie')}
-
+${masthead}
 <div id="nav_holder">
 <ul class="top_nav">
     <li><a href="/">SunGuppy!</a></li>
     <li><a href="/kids">SunGuppy Kids!</a></li>
 </ul>
-
 <ul class='nav'>
     <li><strong>Login</strong>
         <ul>
