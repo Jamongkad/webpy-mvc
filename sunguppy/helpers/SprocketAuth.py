@@ -1,14 +1,16 @@
 import web
 
+
 class SprocketAuth(object):
 
     def __init__(self, app):
-        self.session = web.session.Session(app, web.session.DiskStore('sessions'))
+        self.main_app = app
+        self.session = web.session.Session(self.main_app, web.session.DiskStore('sessions'))
 
         def session_hook():
             web.ctx.session = self.session
 
-        app.add_processor(web.loadhook(session_hook))
+        self.main_app.add_processor(web.loadhook(session_hook))
 
     def protect(self, redirect=False): 
         def meth_signature(meth):

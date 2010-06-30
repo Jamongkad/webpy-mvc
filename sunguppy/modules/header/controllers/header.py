@@ -18,8 +18,11 @@ sa = SprocketAuth(app)
 
 class index(object):
     def GET(self):
+
         login = LoginAccountForm()
         create = CreateAccountForm()
         mast = masthead.index().GET('Mathew')
-        logged_in = web.ctx.session.loggedIn
+        logged_in = web.ctx.session.get('loggedIn')
+
         return render('header.mako', login=login, create=create, mast=mast, logged_in=logged_in)
+
