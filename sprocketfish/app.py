@@ -10,24 +10,23 @@ from forms import LoginAccountForm, CreateAccountForm
 from myrequest import Request
 from SprocketAuth import SprocketAuth
 
-import welcome, catalog, masthead, header
+import welcome, site_admin, masthead, header
 
 web.config.debug = True
 
 urls = (
     '/', 'index',
-    '/maro/(.*)', 'maro',
+    '/maro/(.*)', 'hkro',
     '/login', 'login',
     '/logout', 'logout',
     '/create_account', 'create_account',
     '/welcome', welcome.app,
-    '/catalog', catalog.app,
+    '/site', site_admin.app
 )
 
 db = Connection().sprocket_db
 app = web.application(urls, globals(), autoreload=True)
  
-
 sa = SprocketAuth(app)
 
 class index(object):

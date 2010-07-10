@@ -3,7 +3,8 @@ ${logged_in}
 <div id="nav_holder">
 <ul class='nav'>
     % if not logged_in:
-        <li><strong>Login</strong>
+        <li><strong><a href="">Login</a></strong>
+            <!--
             <ul>
                 <li>
                     <form method="POST" action="/login">
@@ -24,8 +25,10 @@ ${logged_in}
                     </form>
                 </li>
             </ul>
+            -->
         </li> 
-        <li><strong>Create your account now!</strong>
+        <li><strong><a href="">Register</a></strong>
+            <!--
             <ul>
                 <li>
                     <form method="POST" action="/create_account">
@@ -46,13 +49,16 @@ ${logged_in}
                     </form>
                 </li>
             </ul>
+            -->
+        </li>
+    % else:
+        <li><strong>account</strong>
+            <ul>
+                <li><a href="/logout">logout</a>
+            </ul>
         </li>
     % endif
-    <li><strong>account</strong>
-        <ul>
-            <li><a href="/logout">logout</a>
-        </ul>
-    </li>
+    
 </ul>
 </div>
 
