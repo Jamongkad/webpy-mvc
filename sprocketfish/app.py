@@ -3,7 +3,6 @@ import web
 import app_globals
 
 from view import render
-from auth import session, User
 from pymongo import Connection
 
 from forms import LoginAccountForm, CreateAccountForm

@@ -16,7 +16,7 @@ div#nav_holder{
 }
 
 ul.nav, 
-    .nav ul {
+    .nav ul, ul.sprocket_nav, .sprocket_nav ul {
     margin: 0;
     padding: 0;
     cursor: default;
@@ -29,6 +29,12 @@ ul.nav {
     display: table;    
     float: right;
     padding-right: 10px;
+}
+
+ul.sprocket_nav { 
+    display: table;    
+    float: left;
+    padding-left: 10px;
 }
 
 ul.top_nav > li {    
@@ -97,7 +103,7 @@ ul.top_nav,
 
 }
 
-.nav a, .top_nav a {
+.nav a, .top_nav a, .sprocket_nav a {
     text-decoration: none;    
     color: #FFFFFF;
 }
