@@ -4,7 +4,7 @@ from sqlalchemy.ext.declarative import declarative_base
 
 import hashlib
 
-mysql_db = create_engine('mysql://root:p455w0rd@localhost/hero_fish_db')
+mysql_db = create_engine('mysql://mathew:p455w0rd@localhost/hero_fish_db', echo=True)
 
 Base = declarative_base()
 

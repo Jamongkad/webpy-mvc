@@ -5,3 +5,4 @@ milestones:
 
 work in progress:
     * homegrown authentication using MongoDB as a backend store.
+    * authentication using MySQL as a backend store.

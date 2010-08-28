@@ -4,7 +4,7 @@
 </%def>
 
 <div class="grid_10">
-    Welcome ${user_id['name']}! 
+    Welcome ${name}!
 </div>
 
 <script type="text/javascript">

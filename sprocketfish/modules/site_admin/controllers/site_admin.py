@@ -2,16 +2,12 @@
 import app_globals
 import web
 
-from pymongo import Connection
-from pymongo.objectid import ObjectId
 from view import render
 from forms import ChooseOccup
 from myrequest import Request
 
+from sqlalchemy.ext.sqlsoup import SqlSoup
 from forms import LoginAccountForm, CreateAccountForm
-from myrequest import Request
-
-db = Connection().sprocket_db
 
 urls = (
     '/sa/(.*)', 'index',
@@ -23,6 +19,8 @@ urls = (
 app = web.application(urls, globals())
 from SprocketAuth import SprocketAuth
 sa = SprocketAuth(app)
+
+db = SqlSoup('mysql://mathew:p455w0rd@localhost/hero_fish_db', echo=True)
 
 class index(object):
     def GET(self, site_type):  

@@ -3,11 +3,11 @@ import web
 import app_globals
 
 from view import render
-from pymongo import Connection
 
 from forms import LoginAccountForm, CreateAccountForm
 from myrequest import Request
 from SprocketAuth import SprocketAuth
+from sqlalchemy.ext.sqlsoup import SqlSoup
 
 import welcome, site_admin, masthead, header
 
@@ -23,10 +23,11 @@ urls = (
     '/site', site_admin.app
 )
 
-db = Connection().sprocket_db
 app = web.application(urls, globals(), autoreload=True)
  
 sa = SprocketAuth(app)
+
+db = SqlSoup('mysql://mathew:p455w0rd@localhost/hero_fish_db', echo=True)
 
 class index(object):
     def GET(self):
@@ -50,23 +51,24 @@ class logout(object):
 
 class login(object):
     def POST(self):
+        
         login  = LoginAccountForm(Request().POST)
         create = CreateAccountForm() 
-        if login.validate() != True:
-            return render('index.mako', login=login, create=create)
+        if login.validate() != True: 
+            return render('site_admin.mako', site_type='login', login=login, create=create)
 
         post = web.input()
         import hashlib
-        password = hashlib.sha1(post.password).hexdigest()
-        mongo_query = db.users.find_one({'name' : post.username, 'password' : password}) 
-
-        if mongo_query:
-            user = mongo_query['_id']
+        psswrd = hashlib.sha1(post.password).hexdigest()
+        query = db.users.filter_by(name=post.username, password=psswrd).first()
+    
+        if query:
+            user = query.id
         else:
             user = False
 
         return sa.login({ 
-            'check' : mongo_query,
+            'check' : query,
             'redirect_to_if_pass' : '../welcome/',
             'redirect_to_if_fail' : '../',
             'user' : user
@@ -77,5 +79,5 @@ class maro(object):
         return masthead.index().GET()
 
 if __name__ == "__main__":
-    web.wsgi.runwsgi = lambda func, addr=None: web.wsgi.runfcgi(func, addr)
+    #web.wsgi.runwsgi = lambda func, addr=None: web.wsgi.runfcgi(func, addr)
     app.run()

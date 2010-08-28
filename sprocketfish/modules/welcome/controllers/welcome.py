@@ -1,19 +1,17 @@
 import app_globals
 import web
 
-from pymongo import Connection
-from pymongo.objectid import ObjectId
+from sqlalchemy.ext.sqlsoup import SqlSoup
 from view import render
 from forms import ChooseOccup
-from myrequest import Request
-
-db = Connection().sprocket_db
 
 urls = (
     '/', 'index',
     '/add_info', 'add_info',
     '/create_account', 'create_account'
 )
+
+db = SqlSoup('mysql://mathew:p455w0rd@localhost/hero_fish_db', echo=True)
 
 app = web.application(urls, globals(), autoreload=True)
 from SprocketAuth import SprocketAuth
@@ -22,8 +20,10 @@ sa = SprocketAuth(app)
 class index(object):
     @sa.protect()
     def GET(self):   
-        user_id = db.users.find_one({'_id' : web.ctx.session['user_id']})
-        return render('welcome.mako', user_id=user_id)
+        user_id = web.ctx.session.user_id
+        name = db.users.filter_by(id=user_id).first().name
+        return render('welcome.mako', name=name)
+
       
 class add_info(object):
     def POST(self):
