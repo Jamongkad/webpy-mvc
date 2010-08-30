@@ -1,4 +1,4 @@
-from wtforms import Form, BooleanField, TextField, PasswordField, SelectField, validators
+from wtforms import Form, BooleanField, TextField, TextAreaField, PasswordField, SelectField, validators
 
 class LoginAccountForm(Form): 
     username = TextField('username', [validators.Required(message='no user name provided!')])
@@ -10,3 +10,8 @@ class CreateAccountForm(Form):
 
 class ChooseOccup(Form):
     occupation = SelectField('occupation', choices=[('merchant', 'Merchant'), ('mercernary', 'Mercenary'), ('pwet', 'Martie')])
+
+class AddJob(Form): 
+    job_name = TextField('job_nm')
+    job_desc = TextAreaField('job_desc')
+

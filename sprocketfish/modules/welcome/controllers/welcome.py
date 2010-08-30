@@ -3,11 +3,12 @@ import web
 
 from sqlalchemy.ext.sqlsoup import SqlSoup
 from view import render
-from forms import ChooseOccup
+from forms import AddJob
+from db import User, Job, session
 
 urls = (
     '/', 'index',
-    '/add_info', 'add_info',
+    '/add_job', 'add_job',
     '/create_account', 'create_account'
 )
 
@@ -22,20 +23,17 @@ class index(object):
     def GET(self):   
         user_id = web.ctx.session.user_id
         name = db.users.filter_by(id=user_id).first().name
-        return render('welcome.mako', name=name)
+        jobs = db.jobs.all()
+        job_form = AddJob()  
+        return render('welcome.mako', name=name, jobs=jobs, job_form=job_form)
 
       
-class add_info(object):
+class add_job(object):
     def POST(self):
-        i = web.input(planets=[])
-        planets = i['planets']
-        if not planets:
-            return "no planets"
-        else:
-            usr = db.users.find_one({'_id': ObjectId(i['user_id'])})
-            usr['planets_owned'] = i['planets']
-            db.users.save(usr)
-            return "saved!"
+        i = web.input()
+        db.jobs.insert(job_nm=i.job_name, job_desc=i.job_desc)
+        db.commit()
+        web.redirect('../welcome/')
 
 class create_account(object):
     @sa.protect()

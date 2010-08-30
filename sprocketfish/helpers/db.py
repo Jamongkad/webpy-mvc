@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Table, Column, Integer, String, MetaData, ForeignKey
+from sqlalchemy import create_engine, Table, Column, Integer, String, MetaData, ForeignKey, Text
 from sqlalchemy.orm import mapper, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -23,6 +23,20 @@ class User(Base):
 
     def __repr__(self):
         return "<User('%s', '%s', '%s')>" % (self.name, self.fullname, self.password)
+
+class Job(Base):
+
+    __tablename__ = 'jobs'
+    job_id   = Column(Integer(10), primary_key=True)
+    job_nm   = Column(String(100))
+    job_desc = Column(Text())
+
+    def __init__(self, job_nm, job_desc):
+        self.job_nm   = job_nm
+        self.job_desc = job_desc
+
+    def __repr__(self):
+        return "<Job('%s', '%s')>" % (self.job_nm, self.job_desc)
 
 metadata = Base.metadata
 metadata.create_all(mysql_db)
