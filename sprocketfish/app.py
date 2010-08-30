@@ -50,8 +50,8 @@ class logout(object):
         return web.seeother('../')
 
 class login(object):
-    def POST(self):
-        
+
+    def POST(self):    
         login  = LoginAccountForm(Request().POST)
         create = CreateAccountForm() 
         if login.validate() != True: 
