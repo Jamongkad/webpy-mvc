@@ -5,6 +5,9 @@ from sqlalchemy.ext.sqlsoup import SqlSoup
 from view import render
 from forms import AddJob
 from db import User, Job, session
+from myrequest import Request
+
+from mx.DateTime import DateTime
 
 urls = (
     '/', 'index',
@@ -12,7 +15,11 @@ urls = (
     '/create_account', 'create_account'
 )
 
-db = SqlSoup('mysql://mathew:p455w0rd@localhost/hero_fish_db', echo=True)
+try:
+    db = SqlSoup('mysql://mathew:p455w0rd@localhost/hero_fish_db', echo=True)
+except:
+    db.rollback()
+    raise
 
 app = web.application(urls, globals(), autoreload=True)
 from SprocketAuth import SprocketAuth
@@ -31,9 +38,24 @@ class index(object):
 class add_job(object):
     def POST(self):
         i = web.input()
-        db.jobs.insert(job_nm=i.job_name, job_desc=i.job_desc)
-        db.commit()
-        web.redirect('../welcome/')
+        job_form = AddJob(Request().POST)
+
+        user_id = web.ctx.session.user_id
+        name = db.users.filter_by(id=user_id).first().name
+        jobs = db.jobs.all()
+
+        if job_form.validate() is True:
+            start_date = i.start_date.split("/")
+            day   = int(start_date[0])
+            month = int(start_date[1])
+            year  = int(start_date[2])
+            time  = DateTime(year, month, day, 0, 0, 0)
+
+            db.jobs.insert(job_nm=i.job_name, job_desc=i.job_desc, job_date_start=time.ticks())
+            db.commit()
+            web.redirect('../welcome/')
+        else:
+            return render('welcome.mako', name=name, jobs=jobs, job_form=job_form)
 
 class create_account(object):
     @sa.protect()
