@@ -2,6 +2,7 @@ import app_globals
 import web
 
 from sqlalchemy.ext.sqlsoup import SqlSoup
+from sqlalchemy import or_, and_, desc
 from view import render
 from forms import AddJob
 from db import User, Job, session
@@ -30,7 +31,7 @@ class index(object):
     def GET(self):   
         user_id = web.ctx.session.user_id
         name = db.users.filter_by(id=user_id).first().name
-        jobs = db.jobs.all()
+        jobs = db.jobs.order_by(desc(db.jobs.job_id)).all()
         job_form = AddJob()  
         return render('welcome.mako', name=name, jobs=jobs, job_form=job_form)
 
@@ -52,18 +53,12 @@ class add_job(object):
             time  = DateTime(year, month, day, 0, 0, 0)
 
             db.jobs.insert(job_nm=i.job_name, job_desc=i.job_desc, job_date_start=time.ticks())
-            db.commit()
+            try:
+                db.commit()
+            except:
+                db.rollback()
+
             web.redirect('../welcome/')
         else:
             return render('welcome.mako', name=name, jobs=jobs, job_form=job_form)
 
-class create_account(object):
-    @sa.protect()
-    def GET(self):
-        pass
-
-    def POST(self):
-        frm = CreateAccountForm(Request().POST) 
-        if frm.validate() != True:
-            return render('welcome.mako', frm=frm)
-        return web.input() 

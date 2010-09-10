@@ -9,7 +9,7 @@ from myrequest import Request
 from SprocketAuth import SprocketAuth
 from sqlalchemy.ext.sqlsoup import SqlSoup
 
-import welcome, site_admin, masthead, header
+import welcome, site_admin, masthead, header, job
 
 web.config.debug = True
 
@@ -20,7 +20,8 @@ urls = (
     '/logout', 'logout',
     '/create_account', 'create_account',
     '/welcome', welcome.app,
-    '/site', site_admin.app
+    '/site', site_admin.app,
+    '/job', job.app
 )
 
 app = web.application(urls, globals(), autoreload=True)

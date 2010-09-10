@@ -2,21 +2,26 @@
 <%def name="title()">
     SprocketFish Welcome Page
 </%def>
-
-<div class="grid_10">
     <b>Welcome ${name}!</b>
+<div class="grid_10">
+
+    <ul class="job_nav">
     % if jobs:
         % for rows in jobs:
-            <p>
-                <b>${rows.job_nm}</b>
-                <%! from datetime import date %> 
-                <b>${date.fromtimestamp(float(rows.job_date_start))}</b>
-            </p>
+            <li>
+                <a href="/job/view/${rows.job_id}">
+                    <b>${rows.job_nm}</b>
+                    <%! from datetime import date %> 
+                    <b>${date.fromtimestamp(float(rows.job_date_start))}</b>
+                </a>
+            </li>
         % endfor
     % else:
         <p>No jobs.</p>
     % endif
+    </ul>
 
+    <p style="padding-top:50px">
     <form method="POST" action="/welcome/add_job">
         % if job_form.job_name.errors:
             % for i in job_form.job_name.errors:
@@ -36,6 +41,7 @@
         Description* <br/>${job_form.job_desc()} <br/>
         <input type="submit" value="add job" />
     </form>
+    </p>
 </div>
 
 <script type="text/javascript">
