@@ -1,6 +1,7 @@
 from sqlalchemy import create_engine, Table, Column, Integer, String, MetaData, ForeignKey, Text
 from sqlalchemy.orm import mapper, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.ext.sqlsoup import SqlSoup
 
 import hashlib
 
@@ -43,3 +44,12 @@ metadata.create_all(mysql_db)
 
 Session = sessionmaker(bind=mysql_db)
 session = Session()
+
+"""
+please clean this up!
+"""
+try: 
+    sql_db = SqlSoup('mysql://mathew:p455w0rd@localhost/hero_fish_db', echo=True)
+except:
+    sql_db.rollback()
+    raise

@@ -7,7 +7,8 @@ from view import render
 from forms import LoginAccountForm, CreateAccountForm
 from myrequest import Request
 from SprocketAuth import SprocketAuth
-from sqlalchemy.ext.sqlsoup import SqlSoup
+
+from db import User, Job, session, sql_db as db
 
 import welcome, site_admin, masthead, header, job
 
@@ -27,8 +28,6 @@ urls = (
 app = web.application(urls, globals(), autoreload=True)
  
 sa = SprocketAuth(app)
-
-db = SqlSoup('mysql://mathew:p455w0rd@localhost/hero_fish_db', echo=True)
 
 class index(object):
     def GET(self):

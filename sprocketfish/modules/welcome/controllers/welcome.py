@@ -1,11 +1,10 @@
 import app_globals
 import web
 
-from sqlalchemy.ext.sqlsoup import SqlSoup
 from sqlalchemy import or_, and_, desc
 from view import render
 from forms import AddJob
-from db import User, Job, session
+from db import User, Job, session, sql_db as db
 from myrequest import Request
 
 from mx.DateTime import DateTime
@@ -15,12 +14,6 @@ urls = (
     '/add_job', 'add_job',
     '/create_account', 'create_account'
 )
-
-try:
-    db = SqlSoup('mysql://mathew:p455w0rd@localhost/hero_fish_db', echo=True)
-except:
-    db.rollback()
-    raise
 
 app = web.application(urls, globals(), autoreload=True)
 from SprocketAuth import SprocketAuth
