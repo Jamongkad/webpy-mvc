@@ -1,7 +1,7 @@
 import mechanize, urllib
 import cookielib, re
 from pyquery import PyQuery as pq
-from dataprocess import gt_process_list_view
+from dataprocess import crawler, test_crawler
 
 url = "http://grupotoyota.com.ph/board/"
 
@@ -18,12 +18,42 @@ br.submit()
 print "login in successful!"
 
 html = pq(br.response().read())
-selling_link = html('a[href*="./viewforum.php?f=8"]').map(lambda i, e: pq(e).attr('href'))[0]
-req = br.find_link(url=selling_link)
-res = br.follow_link(req)
-listings_html = pq(res.read())
-sales_urls = listings_html('td.row1 > img[src*="topic"]').parents('td.row1').siblings('td.row1 > a.topictitle').\
-             map(lambda i, e: br.find_link(url=pq(e).attr('href')))
-gt_process_list_view(sales_urls, br, pq, 'div.postbody', 4)
 
+processing = True
+page = 1
+nxt_pge_cnt = 25
 
+regex = '\&t=(\d+)'
+c_content = 'div.postbody'
+site = 'GT'
+
+while(processing):
+    print "going to Auto parts Selling..."
+    (selling_link, ) = html('a[href*="./viewforum.php?f=8"]').map(lambda i, e: pq(e).attr('href'))
+    req = br.find_link(url=selling_link)
+    res = br.follow_link(req)
+    print "Auto parts selling url:%s" % (res.geturl())
+
+    next_page_url = "http://grupotoyota.com.ph/board/viewforum.php?f=8&start=%s" % (nxt_pge_cnt)
+
+    if page is 1:
+        listings_html = pq(res.read())
+        sales_urls = listings_html('td.row1 > img[src*="topic"]').parents('td.row1').siblings('td.row1 > a.topictitle').\
+                     map(lambda i, e: br.find_link(url=pq(e).attr('href')))
+        crawler(sales_urls, mecha_state=br, content=c_content, post_regex=regex, site_id=site, reform_url=True)
+        page += 1
+        br.back()
+    else:
+        print "scraping page %s" % (next_page_url)
+        print "Page Count at %s" % (nxt_pge_cnt)
+        res_pg_2 = br.open(next_page_url)
+        listings_2 = pq(res_pg_2.read())
+        sales_urls = listings_2('td.row1 > img[src*="topic"]').parents('td.row1').siblings('td.row1 > a.topictitle').\
+                     map(lambda i, e: br.find_link(url=pq(e).attr('href'))) 
+        crawler(sales_urls, mecha_state=br, content=c_content, post_regex=regex, site_id=site, reform_url=True)
+        nxt_pge_cnt += 25
+
+        if(nxt_pge_cnt == 150):
+            processing = False
+
+        br.back()
