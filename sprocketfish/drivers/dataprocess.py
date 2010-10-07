@@ -1,7 +1,7 @@
 from sqlalchemy.ext.sqlsoup import SqlSoup
 
 import mechanize, urllib
-import cookielib, re
+import cookielib, re, sys
 from pyquery import PyQuery as pq
 import MultiDict
 
@@ -20,14 +20,15 @@ def crawler(storage_list, **keywords):
     for links in storage_list:
         br.follow_link(links)
         d = pq(br.response().read()) 
-        posts = d(keywords['content']).map(lambda i, e: pq(e).html())
-        authors = d(keywords['post_author']).map(lambda i ,e: pq(e).text())
+        posts = d(keywords['content']).map(lambda i, e: (pq(e).text(), pq(e).html()))
+        authors = d(keywords['author']).map(lambda i ,e: pq(e).text())
         
         post_data = process_post_data(posts, authors, keywords['site_id'])
 
         linky = links.text
 
         l_title = unicode(linky, 'latin-1').encode('utf-8')
+
         (matches, ) = re.compile(keywords['post_regex']).findall(links.url)
         if keywords['reform_url']: 
             link_url = links.url
@@ -65,20 +66,9 @@ def crawler(storage_list, **keywords):
                     my_list.list_title = l_title
  
                 print "checking for updated post..."
-                #for idx, post in enumerate(posts):
-                #    post_id = "%s:%s" % (sku, "postid-%s" % idx)
-                #    existing_post = sql_db.listings_posts.filter(sql_db.listings_posts.idlistings_posts==post_id).first()
-                #    if existing_post:
-                #        pst = post.encode('utf-8')
-                #        if pst != existing_post.list_text:                        
-                #            print "post id: %s has been updated!" % (post_id)
-                #            existing_post.list_text = pst
-                #    else:
-                #        print "new message has been added to post id: %s" % (sku)
-                #        sql_db.listings_posts.insert(idlistings_posts=post_id, list_sku=sku, list_text=post)
-                for i in post_data.keys():
-                    for idx, p in enumerate(data.getall(i)): 
-                        post_id = "%s:%s" % (sku, "postid-%s" % idx) 
+                for author in post_data.keys():
+                    for idx, p in enumerate(post_data.getall(author)): 
+                        post_id = "%s:%s:%s" % (sku, "postid-%s" % idx, author) 
                         existing_post = sql_db.listings_posts.filter(sql_db.listings_posts.idlistings_posts==post_id).first()
 
                         pst_text = p[0].encode('utf-8')
@@ -91,23 +81,20 @@ def crawler(storage_list, **keywords):
                         else: 
                             print "inserting posts %s" % (post_id)
                             sql_db.listings_posts.insert(idlistings_posts=post_id, list_sku=sku, 
-                                                         list_text_text=pst_text, list_text_html=pst_html, list_author=i)
+                                                         list_text_text=pst_text, list_text_html=pst_html, list_author=author)
                 sql_db.commit()
             else:
                 print "new sku! inserting into data preparation table."
                 #insert post
                 sql_db.data_prep.insert(list_sku=sku, list_title=l_title, site_id=site_id.site_id, list_url=url)
                 #insert sub posts and authors
-                #for idx, post in enumerate(posts):
-                #    post_id = "%s:%s" % (sku, "postid-%s" % idx)
-                #    print "inserting posts %s" % (post_id)
-                #    sql_db.listings_posts.insert(idlistings_posts=post_id, list_sku=sku, list_text_html=post, list_author=authors[idx])
-                for i in post_data.keys():
-                    for idx, p in enumerate(data.getall(i)): 
-                        post_id = "%s:%s" % (sku, "postid-%s" % idx) 
-                        print "inserting posts %s" % (post_id)
+                for author in post_data.keys():
+                    for idx, p in enumerate(post_data.getall(author)): 
+                        post_id = "%s:%s:%s" % (sku, "postid-%s" % idx, author) 
+                        print "inserting posts %s" % (post_id) 
                         sql_db.listings_posts.insert(idlistings_posts=post_id, list_sku=sku, 
-                                                     list_text_text=p[0], list_text_html=p[1], list_author=i)
+                                                     list_text_text=p[0], list_text_html=p[1], list_author=author)
+                        #print post_id, p[0]
 
                 sql_db.commit()
                 print "insertion successful!"
@@ -178,11 +165,6 @@ def test_crawler(storage_list, **keywords):
         #       br.back()
         #br.back()
 
-
-def natural(text):
-    matches = re.compile('([0-9]+[Kk]|[0-9]{11})').findall(text)
-    return matches
-
 def find_quote(text):
     match = re.compile('QuoteBegin').findall(text)
     return match
@@ -192,12 +174,10 @@ def process_post_data(posts, authors, site_id):
     storage = MultiDict.OrderedMultiDict()
     if site_id == 'JDMU': 
         clean_posts = [(post[0], post[1]) for post in posts if not find_quote(post[0])]
+    else:
+        clean_posts = [(post[0], post[1]) for post in posts]
 
     for i in range(0, len(authors)):
         storage[authors[i]] = clean_posts[i]
 
     return storage
-
-class ListPosts(object):
-    def __init__(self):
-        self.storage = {}

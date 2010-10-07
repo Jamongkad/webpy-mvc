@@ -40,8 +40,8 @@ while(processing):
         listings = pq(res.read())
         lists = listings('td.darkrow1').eq(5).parents('tr').siblings('tr').children('td > a[href*="showtopic"]').not_('.linkthru')
         storage_list = lists.map(lambda i, e: br.find_link(text=pq(e).text().replace("  ", " ")))
-        test_crawler(storage_list, mecha_state=br, content=post_content, author=post_author, post_regex=regex, site_id=site, reform_url=False)
-        #crawler(storage_list, mecha_state=br, content=post_content, author=post_author, post_regex=regex, site_id=site, reform_url=False)
+        #test_crawler(storage_list, mecha_state=br, content=post_content, author=post_author, post_regex=regex, site_id=site, reform_url=False)
+        crawler(storage_list, mecha_state=br, content=post_content, author=post_author, post_regex=regex, site_id=site, reform_url=False)
         page += 1
         br.back()
     else:
@@ -51,8 +51,8 @@ while(processing):
         res_pg_2 = br.open(next_page_url)
         listings_2 = pq(res_pg_2.read())
         storage_list_2 = listings_2('td.row4 > a[href*="showtopic"]').map(lambda i, e: br.find_link(url=pq(e).attr('href')))
-        test_crawler(storage_list_2, mecha_state=br, content=post_content, author=post_author, post_regex=regex, site_id=site, reform_url=False)
-        #crawler(storage_list_2, mecha_state=br, content=post_content, author=post_author, post_regex=regex, site_id=site, reform_url=False)
+        #test_crawler(storage_list_2, mecha_state=br, content=post_content, author=post_author, post_regex=regex, site_id=site, reform_url=False)
+        crawler(storage_list_2, mecha_state=br, content=post_content, author=post_author, post_regex=regex, site_id=site, reform_url=False)
         nxt_pge_cnt += 40
         br.back()
 

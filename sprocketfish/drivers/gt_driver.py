@@ -23,8 +23,9 @@ processing = True
 page = 1
 nxt_pge_cnt = 25
 
-regex = '\&t=(\d+)'
 c_content = 'div.postbody'
+c_author = 'b.postauthor'
+regex = '\&t=(\d+)'
 site = 'GT'
 
 while(processing):
@@ -40,7 +41,7 @@ while(processing):
         listings_html = pq(res.read())
         sales_urls = listings_html('td.row1 > img[src*="topic"]').parents('td.row1').siblings('td.row1 > a.topictitle').\
                      map(lambda i, e: br.find_link(url=pq(e).attr('href')))
-        crawler(sales_urls, mecha_state=br, content=c_content, post_regex=regex, site_id=site, reform_url=True)
+        crawler(sales_urls, mecha_state=br, content=c_content, author=c_author, post_regex=regex, site_id=site, reform_url=True)
         page += 1
         br.back()
     else:
@@ -50,7 +51,7 @@ while(processing):
         listings_2 = pq(res_pg_2.read())
         sales_urls = listings_2('td.row1 > img[src*="topic"]').parents('td.row1').siblings('td.row1 > a.topictitle').\
                      map(lambda i, e: br.find_link(url=pq(e).attr('href'))) 
-        crawler(sales_urls, mecha_state=br, content=c_content, post_regex=regex, site_id=site, reform_url=True)
+        crawler(sales_urls, mecha_state=br, content=c_content, author=c_author, post_regex=regex, site_id=site, reform_url=True)
         nxt_pge_cnt += 25
 
         if(nxt_pge_cnt == 150):

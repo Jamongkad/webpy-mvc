@@ -19,11 +19,13 @@ br.submit()
 
 processing = True
 page = 1
-end_pge_cnt = 3
+end_pge_cnt = 5
 
-regex = 'HCP\/topic\/(\d+)/'
 c_content = 'td.c_post'
+c_author = 'td.c_username'
 site = 'HCP'
+regex = 'HCP\/topic\/(\d+)/'
+
 while(processing):
     print "going to Parts & Accessories"
     req = br.click_link(text='Parts & Accessories')
@@ -32,7 +34,7 @@ while(processing):
         print "scraping page 1"
         listings = pq(res.read())
         storage_list = listings('td.c_cat-title > a[href*="topic"]').map(lambda i, e: br.find_link(url=pq(e).attr('href')))
-        crawler(storage_list, mecha_state=br, content=c_content, post_regex=regex, site_id=site, reform_url=False)
+        crawler(storage_list, mecha_state=br, content=c_content, author=c_author, post_regex=regex, site_id=site, reform_url=False)
         page += 1
         br.back()
     else:
@@ -41,7 +43,7 @@ while(processing):
         res_pg_2 = br.follow_link(req_pg_2)
         listings = pq(res_pg_2.read())
         storage_list = listings('td.c_cat-title > a[href*="topic"]').map(lambda i, e: br.find_link(url=pq(e).attr('href')))
-        crawler(storage_list, mecha_state=br, content=c_content, post_regex=regex, site_id=site, reform_url=False)
+        crawler(storage_list, mecha_state=br, content=c_content, author=c_author, post_regex=regex, site_id=site, reform_url=False)
         page += 1
         br.back()
         
