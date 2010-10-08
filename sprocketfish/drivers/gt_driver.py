@@ -31,13 +31,10 @@ regex = '\&t=(\d+)'
 
 while(processing):
     print "going to Auto parts Selling..."
-    #(selling_link, ) = html('a[href*="./viewforum.php?f=8"]').map(lambda i, e: pq(e).attr('href'))
-    #req = br.find_link(url=selling_link)
-    #res = br.follow_link(req)
+    (selling_link, ) = html('a[href*="./viewforum.php?f=8"]').map(lambda i, e: pq(e).attr('href'))
+    req = br.find_link(url=selling_link)
+    res = br.follow_link(req)
     
-    req = br.click_link(text='Auto parts - Selling (Car Stuff, Parts, Accessories)...')
-    res = br.open(req)
-
     if page is 1:
         listings_html = pq(res.read())
         sales_urls = listings_html('td.row1 > img[src*="topic"]').parents('td.row1').siblings('td.row1 > a.topictitle').\
