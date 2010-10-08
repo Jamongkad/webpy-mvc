@@ -4,17 +4,18 @@ from pyquery import PyQuery as pq
 from dataprocess import crawler, test_crawler
 
 url = "http://grupotoyota.com.ph/board/"
-
 br = mechanize.Browser(factory=mechanize.RobustFactory())  
 br.addheaders = [('User-agent', 'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.1) Gecko/2008071615 Fedora/3.0.1-1.fc9 Firefox/3.0.1')]
 br.set_handle_robots(False)
 print "entering GT site..."
 print "logging into site..."
 br.open(url)
+
 br.select_form(nr=0)
 br['username'] = 'jamongkad'
 br['password'] = 'p455w0rd'
 br.submit()
+
 print "login in successful!"
 
 html = pq(br.response().read())
@@ -25,8 +26,8 @@ nxt_pge_cnt = 25
 
 c_content = 'div.postbody'
 c_author = 'b.postauthor'
-regex = '\&t=(\d+)'
 site = 'GT'
+regex = '\&t=(\d+)'
 
 while(processing):
     print "going to Auto parts Selling..."
@@ -34,8 +35,6 @@ while(processing):
     req = br.find_link(url=selling_link)
     res = br.follow_link(req)
     print "Auto parts selling url:%s" % (res.geturl())
-
-    next_page_url = "http://grupotoyota.com.ph/board/viewforum.php?f=8&start=%s" % (nxt_pge_cnt)
 
     if page is 1:
         listings_html = pq(res.read())
@@ -45,6 +44,7 @@ while(processing):
         page += 1
         br.back()
     else:
+        next_page_url = "http://grupotoyota.com.ph/board/viewforum.php?f=8&start=%s" % (nxt_pge_cnt)
         print "scraping page %s" % (next_page_url)
         print "Page Count at %s" % (nxt_pge_cnt)
         res_pg_2 = br.open(next_page_url)

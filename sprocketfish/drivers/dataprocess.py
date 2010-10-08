@@ -23,19 +23,20 @@ def crawler(storage_list, **keywords):
         posts = d(keywords['content']).map(lambda i, e: (pq(e).text(), pq(e).html()))
         authors = d(keywords['author']).map(lambda i ,e: pq(e).text())
         
-        post_data = process_post_data(posts, authors, keywords['site_id'])
+        #post_data = process_post_data(posts, authors, keywords['site_id'])
 
         linky = links.text
 
         l_title = unicode(linky, 'latin-1').encode('utf-8')
 
         (matches, ) = re.compile(keywords['post_regex']).findall(links.url)
-        if keywords['reform_url']: 
-            link_url = links.url
-            reformed_url = link_url.split('./')[1]
-            url = "http://grupotoyota.com.ph/board/%s" % (reformed_url)
-        else:
-            url = links.url
+        #if keywords['reform_url']: 
+        #    link_url = links.url
+        #    reformed_url = link_url.split('./')[1]
+        #    url = "http://grupotoyota.com.ph/board/%s" % (reformed_url)
+        #else:
+        #    url = links.url
+        url = define_link(links, keywords['reform_url'])
 
         #debug output
         print "-------------------------------------------------"
@@ -55,49 +56,50 @@ def crawler(storage_list, **keywords):
             else:
                 print "failure in sku extraction..."
                 sys.exit()
-          
-            if my_list:
-                print "sku record db exists!"
-                title = my_list.list_title
+           
+            check_update_post(my_list, ProcessDataPosts(posts, authors, site_id))
+            #if my_list:
+            #    print "sku record db exists!"
+            #    title = my_list.list_title
 
-                print "checking for new title..." 
-                if title != l_title:
-                    print "title has been updated! updating now..."
-                    my_list.list_title = l_title
+            #    print "checking for new title..." 
+            #    if title != l_title:
+            #        print "title has been updated! updating now..."
+            #        my_list.list_title = l_title
  
-                print "checking for updated post..."
-                for author in post_data.keys():
-                    for idx, p in enumerate(post_data.getall(author)): 
-                        post_id = "%s:%s:%s" % (sku, "postid-%s" % idx, author) 
-                        existing_post = sql_db.listings_posts.filter(sql_db.listings_posts.idlistings_posts==post_id).first()
+            #    print "checking for updated post..."
+            #    for author in post_data.keys():
+            #        for idx, p in enumerate(post_data.getall(author)): 
+            #            post_id = "%s:%s:%s" % (sku, "postid-%s" % idx, author) 
+            #            existing_post = sql_db.listings_posts.filter(sql_db.listings_posts.idlistings_posts==post_id).first()
 
-                        pst_text = p[0].encode('utf-8')
-                        pst_html = p[1].encode('utf-8')
+            #            pst_text = p[0].encode('utf-8')
+            #            pst_html = p[1].encode('utf-8')
 
-                        if existing_post:
-                            if pst_text != existing_post.list_text_text and pst_html != existing_post.list_text_html:
-                                existing_post.list_text_text = pst_text
-                                existing_post.list_text_html = pst_html
-                        else: 
-                            print "inserting posts %s" % (post_id)
-                            sql_db.listings_posts.insert(idlistings_posts=post_id, list_sku=sku, 
-                                                         list_text_text=pst_text, list_text_html=pst_html, list_author=author)
-                sql_db.commit()
-            else:
-                print "new sku! inserting into data preparation table."
+            #            if existing_post:
+            #                if pst_text != existing_post.list_text_text and pst_html != existing_post.list_text_html:
+            #                    existing_post.list_text_text = pst_text
+            #                    existing_post.list_text_html = pst_html
+            #            else: 
+            #                print "inserting posts %s" % (post_id)
+            #                sql_db.listings_posts.insert(idlistings_posts=post_id, list_sku=sku, 
+            #                                             list_text_text=pst_text, list_text_html=pst_html, list_author=author)
+            #    sql_db.commit()
+            #else:
+            #    print "new sku! inserting into data preparation table."
                 #insert post
-                sql_db.data_prep.insert(list_sku=sku, list_title=l_title, site_id=site_id.site_id, list_url=url)
+            #    sql_db.data_prep.insert(list_sku=sku, list_title=l_title, site_id=site_id.site_id, list_url=url)
                 #insert sub posts and authors
-                for author in post_data.keys():
-                    for idx, p in enumerate(post_data.getall(author)): 
-                        post_id = "%s:%s:%s" % (sku, "postid-%s" % idx, author) 
-                        print "inserting posts %s" % (post_id) 
-                        sql_db.listings_posts.insert(idlistings_posts=post_id, list_sku=sku, 
-                                                     list_text_text=p[0], list_text_html=p[1], list_author=author)
+            #    for author in post_data.keys():
+            #        for idx, p in enumerate(post_data.getall(author)): 
+            #            post_id = "%s:%s:%s" % (sku, "postid-%s" % idx, author) 
+            #            print "inserting posts %s" % (post_id) 
+            #            sql_db.listings_posts.insert(idlistings_posts=post_id, list_sku=sku, 
+            #                                         list_text_text=p[0], list_text_html=p[1], list_author=author)
                         #print post_id, p[0]
 
-                sql_db.commit()
-                print "insertion successful!"
+            #    sql_db.commit()
+            #    print "insertion successful!"
         except Exception, err:
             print "something went wrong! rolling back table! ERROR: %s" % (str(err))
             sql_db.rollback()
@@ -165,6 +167,65 @@ def test_crawler(storage_list, **keywords):
         #       br.back()
         #br.back()
 
+def check_update_post(my_list, data_obj):
+
+    if my_list:
+        print "sku record db exists!"
+        title = my_list.list_title
+
+        print "checking for new title..." 
+        if title != l_title:
+            print "title has been updated! updating now..."
+            my_list.list_title = l_title
+
+        post_data = data_obj.process_post_data()
+        author = data_obj.author
+
+        print "checking for updated post..."
+        for author in post_data.keys():
+            for idx, p in enumerate(post_data.getall(author)): 
+                post_id = "%s:%s:%s" % (sku, "postid-%s" % idx, author) 
+                existing_post = sql_db.listings_posts.filter(sql_db.listings_posts.idlistings_posts==post_id).first()
+
+                pst_text = p[0].encode('utf-8')
+                pst_html = p[1].encode('utf-8')
+
+                if existing_post:
+                    if pst_text != existing_post.list_text_text and pst_html != existing_post.list_text_html:
+                        existing_post.list_text_text = pst_text
+                        existing_post.list_text_html = pst_html
+                else: 
+                    print "inserting posts %s" % (post_id)
+                    sql_db.listings_posts.insert(idlistings_posts=post_id, list_sku=sku, 
+                                                 list_text_text=pst_text, list_text_html=pst_html, list_author=author)
+        sql_db.commit()
+
+    else:
+        print "new sku! inserting into data preparation table."
+        #insert post
+        sql_db.data_prep.insert(list_sku=sku, list_title=l_title, site_id=site_id.site_id, list_url=url)
+        #insert sub posts and authors
+        for author in post_data.keys():
+            for idx, p in enumerate(post_data.getall(author)): 
+                post_id = "%s:%s:%s" % (sku, "postid-%s" % idx, author) 
+                print "inserting posts %s" % (post_id) 
+                sql_db.listings_posts.insert(idlistings_posts=post_id, list_sku=sku, 
+                                             list_text_text=p[0], list_text_html=p[1], list_author=author)
+        
+        sql_db.commit()
+        print "insertion successful!"
+
+
+def define_link(links, reform_url_flag): 
+    if reform_url_flag: 
+        link_url = links.url
+        reformed_url = link_url.split('./')[1]
+        url = "http://grupotoyota.com.ph/board/%s" % (reformed_url)
+    else:
+        url = links.url
+
+    return url
+
 def find_quote(text):
     match = re.compile('QuoteBegin').findall(text)
     return match
@@ -181,3 +242,21 @@ def process_post_data(posts, authors, site_id):
         storage[authors[i]] = clean_posts[i]
 
     return storage
+
+class ProcessDataPosts(object):
+    def __init__(self, posts, authors, site_id):
+        self.posts   = posts
+        self.authors = authors
+        self.site_id = site_id
+
+    def process_post_data(self):
+        storage = MultiDict.OrderedMultiDict()
+        if self.site_id == 'JDMU': 
+            clean_posts = [(post[0], post[1]) for post in self.posts if not find_quote(post[0])]
+        else:
+            clean_posts = [(post[0], post[1]) for post in self.posts]
+
+        for i in range(0, len(self.authors)):
+            storage[self.authors[i]] = clean_posts[i]
+
+        return storage

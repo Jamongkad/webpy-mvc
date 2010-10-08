@@ -3,7 +3,6 @@ import mechanize, urllib
 import cookielib, re
 from pyquery import PyQuery as pq
 
-#url = 'http://www.jdmunderground.ph/'
 url = 'http://z11.invisionfree.com/JDM_Underground'
 br = mechanize.Browser(factory=mechanize.RobustFactory())  
 br.addheaders = [('User-agent', 'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.1) Gecko/2008071615 Fedora/3.0.1-1.fc9 Firefox/3.0.1')]
@@ -22,12 +21,11 @@ page = 1
 
 post_content = 'div.postcolor'
 post_author = 'span.normalname a span'
+site = 'JDMU'
 regex = 'index.php\?showtopic=(\d+)'
 
 nxt_pge_cnt = 40
 end_pge_cnt = 80
-
-site = 'JDMU'
 
 while(processing):
     print "going to Underground Parts"

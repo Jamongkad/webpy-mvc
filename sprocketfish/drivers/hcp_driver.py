@@ -1,4 +1,3 @@
-from sqlalchemy.ext.sqlsoup import SqlSoup
 from dataprocess import crawler, test_crawler
 import mechanize, urllib
 import cookielib, re
@@ -12,6 +11,7 @@ br.set_handle_robots(False)
 print "entering hcp site..."
 print "logging into site..."
 br.open(url)
+
 br.select_form(nr=0)
 br['uname'] = 'jamongkad'
 br['pw'] = 'password'
